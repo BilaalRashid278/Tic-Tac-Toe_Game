@@ -13,7 +13,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const cross = '<i class="fa-solid fa-xmark text-white fs-1"></i>';
     const reset = document.querySelector('.reset');
     let isgame = false
-    const iswinner = document.querySelector('.winner');
     const ending = document.getElementById('start-end');
 
     buttons.forEach((e, index) => {
@@ -31,8 +30,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 return randomValGenerator
             };
             const randomValue = randomValGeneratorFunc();
-            const EndingChecker = () => {
-                if (btn_1.innerHTML !== "" && btn_2.innerHTML !== "" && btn_3.innerHTML !== "" && btn_4.innerHTML !== "" && btn_5.innerHTML !== "" && btn_6.innerHTML !== "" && btn_7.innerHTML !== "" && btn_8.innerHTML !== "" && btn_9.innerHTML !== "") {
+            setTimeout(() => {
+                try {
+                    filtered[randomValue].innerHTML = zero
+                } catch (error) {
                     ending.innerHTML = "Game is End Now";
                     setTimeout(() => {
                         ending.innerText = "Let's Start Now";
@@ -41,17 +42,8 @@ document.addEventListener('DOMContentLoaded', () => {
                                 e.innerHTML = '';
                             }
                         });
-                        console.log('erro')
                     }, 1000);
                 }
-            }
-            setTimeout(() => {
-                try {
-                    filtered[randomValue].innerHTML = zero
-                } catch (error) {
-                    console.log("error" + error)
-                }
-                EndingChecker();
             }, 500);
         };
         e.addEventListener('click', () => {
