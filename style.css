@@ -1,0 +1,19 @@
+.game-div{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+.button{
+    width: 100px;
+    height: 75px;
+    /* border: none; */
+    outline: none;
+    margin: 0.5px;
+    border-radius: 3px;
+    background-color: rgba(0, 0, 0, 1);
+}
+.indicator{
+    width: 150px;
+    margin-top: 20px;
+    padding: 10px 30px;
+    border-radius: 7px;
+}
