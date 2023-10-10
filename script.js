@@ -13,9 +13,32 @@ document.addEventListener('DOMContentLoaded', () => {
     const cross = '<i class="fa-solid fa-xmark text-white fs-1"></i>';
     const reset = document.querySelector('.reset');
     let isgame = false
+    let isCrossWinner = false;
     const ending = document.getElementById('start-end');
 
     buttons.forEach((e, index) => {
+        const winnerChecker = () => {
+            if ((btn_1.innerHTML == cross && btn_2.innerHTML == cross && btn_3.innerHTML == cross) || (btn_4.innerHTML == cross && btn_5.innerHTML == cross && btn_6.innerHTML == cross) || (btn_7.innerHTML == cross && btn_8.innerHTML == cross && btn_9.innerHTML == cross) || (btn_1.innerHTML == cross && btn_5.innerHTML == cross && btn_9.innerHTML == cross) || (btn_3.innerHTML == cross && btn_5.innerHTML == cross && btn_7.innerHTML == cross) || (btn_1.innerHTML == cross && btn_4.innerHTML == cross && btn_7.innerHTML == cross) || (btn_2.innerHTML == cross && btn_5.innerHTML == cross && btn_8.innerHTML == cross) || (btn_3.innerHTML == cross && btn_6.innerHTML == cross && btn_9.innerHTML == cross)) {
+                isCrossWinner = true
+            }else{
+                isCrossWinner = false
+            }
+        };
+        const ComputerWinnerChecker = () => {
+            if ((btn_1.innerHTML == zero && btn_2.innerHTML == zero && btn_3.innerHTML == zero) || (btn_4.innerHTML == zero && btn_5.innerHTML == zero && btn_6.innerHTML == zero) || (btn_7.innerHTML == zero && btn_8.innerHTML == zero && btn_9.innerHTML == zero) || (btn_1.innerHTML == zero && btn_5.innerHTML == zero && btn_9.innerHTML == zero) || (btn_3.innerHTML == zero && btn_5.innerHTML == zero && btn_7.innerHTML == zero) || (btn_1.innerHTML == zero && btn_4.innerHTML == zero && btn_7.innerHTML == zero) || (btn_2.innerHTML == zero && btn_5.innerHTML == zero && btn_8.innerHTML == zero) || (btn_3.innerHTML == zero && btn_6.innerHTML == zero && btn_9.innerHTML == zero)) {
+                ending.innerHTML = 'Computer Win';
+                setTimeout(() => {
+                    ending.innerText = "Let's Start Now";
+                    buttons.forEach((e) => {
+                        if (e.innerHTML == zero || e.innerHTML == cross) {
+                            e.innerHTML = '';
+                        }
+                    });
+                }, 1500);
+            }else{
+                isCrossWinner = false
+            }
+        }
         const randomFunction = () => {
             const arr = [btn_1, btn_2, btn_3, btn_4, btn_5, btn_6, btn_7, btn_8, btn_9];
             let filtered;
@@ -33,8 +56,9 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
                 try {
                     filtered[randomValue].innerHTML = zero
+                    ComputerWinnerChecker();
                 } catch (error) {
-                    ending.innerHTML = "Game is End Now";
+                    ending.innerHTML = 'Match is Tie';
                     setTimeout(() => {
                         ending.innerText = "Let's Start Now";
                         buttons.forEach((e) => {
@@ -43,14 +67,29 @@ document.addEventListener('DOMContentLoaded', () => {
                             }
                         });
                     }, 1000);
-                }
+                };
             }, 500);
         };
         e.addEventListener('click', () => {
             if (isgame == false) {
                 isgame = true;
                 buttons[index].innerHTML = cross
-                randomFunction();
+                winnerChecker();
+                if(isCrossWinner == true) {
+                    ending.innerHTML = 'You Win';
+                    setTimeout(() => {
+                        ending.innerText = "Let's Start Now";
+                        buttons.forEach((e) => {
+                            if (e.innerHTML == zero || e.innerHTML == cross) {
+                                e.innerHTML = '';
+                            }
+                        });
+                    }, 1500);
+                    isCrossWinner = false
+                    isgame = false
+                }else{
+                    randomFunction();
+                }
             }
         });
     });
