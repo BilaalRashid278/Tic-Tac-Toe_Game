@@ -16,16 +16,42 @@ document.addEventListener('DOMContentLoaded', () => {
     let isCrossWinner = false;
     const ending = document.getElementById('start-end');
 
-    let arr = [];
+    const arr = [btn_1, btn_2, btn_3, btn_4, btn_5, btn_6, btn_7, btn_8, btn_9];
 
-    for(let i = 1; i <= 9; i++){
-        arr.push(document.querySelector(`.btn-${i}`));
+    let Run_Calulations_After_Random_Generate = null;
+
+    const How_Much_Empties = () => {
+        let calculation = [];
+        const pairs = [
+            [0, 1, 2],
+            [3, 4, 5],
+            [6, 7, 8],
+            [0, 4, 8],
+            [2, 4, 6],
+            [0, 3, 6],
+            [1, 4, 7],
+            [2, 5, 8]
+        ];
+        for (key in pairs) {
+            let empty_btns = [];
+            for (let i = 0; i < pairs[key].length; i++) {
+                if (!arr[pairs[key][i]].innerHTML) {
+                    empty_btns.push(pairs[key][i]);
+                }
+            }
+            if (empty_btns.length > 0) {
+                calculation.push(empty_btns);
+            }
+            empty_btns = [];
+        };
+        return calculation;
     }
+
     buttons.forEach((e, index) => {
         const winnerChecker = () => {
             if ((btn_1.innerHTML == cross && btn_2.innerHTML == cross && btn_3.innerHTML == cross) || (btn_4.innerHTML == cross && btn_5.innerHTML == cross && btn_6.innerHTML == cross) || (btn_7.innerHTML == cross && btn_8.innerHTML == cross && btn_9.innerHTML == cross) || (btn_1.innerHTML == cross && btn_5.innerHTML == cross && btn_9.innerHTML == cross) || (btn_3.innerHTML == cross && btn_5.innerHTML == cross && btn_7.innerHTML == cross) || (btn_1.innerHTML == cross && btn_4.innerHTML == cross && btn_7.innerHTML == cross) || (btn_2.innerHTML == cross && btn_5.innerHTML == cross && btn_8.innerHTML == cross) || (btn_3.innerHTML == cross && btn_6.innerHTML == cross && btn_9.innerHTML == cross)) {
                 isCrossWinner = true
-            }else{
+            } else {
                 isCrossWinner = false
             }
         };
@@ -40,28 +66,47 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                     });
                 }, 1500);
-            }else{
+            } else {
                 isCrossWinner = false
             }
         }
         const randomFunction = () => {
             let filtered;
             isgame = false
+            let random;
             const randomValGeneratorFunc = () => {
                 filtered = arr.filter((value) => {
                     return value.innerHTML == ""
                 });
+                console.log(filtered);
                 const filteredLength = filtered.length - 1
                 let randomValGenerator = Math.round(Math.random() * filteredLength);
                 return randomValGenerator
             };
-            const randomValue = randomValGeneratorFunc();
+            if (Run_Calulations_After_Random_Generate !== null) {
+                let randomPickArray;
+                if (Run_Calulations_After_Random_Generate?.length > 0) {
+                    randomPickArray = Math.floor(Math.random() * Run_Calulations_After_Random_Generate?.length - 1);
+                    const randomPickInArr = Run_Calulations_After_Random_Generate[randomPickArray];
+                    random = randomPickInArr[Math.floor(Math.random() * randomPickInArr?.length - 1)];
+                }
+            } else {
+                const randomValue = randomValGeneratorFunc();
+                random = randomValue;
+            }
+
+            Run_Calulations_After_Random_Generate = null;
+
             setTimeout(() => {
                 try {
-                    filtered[randomValue].innerHTML = zero
+                    arr[random].innerHTML = zero
+                    const calculations = How_Much_Empties();
+                    Run_Calulations_After_Random_Generate = calculations;
                     ComputerWinnerChecker();
                 } catch (error) {
+                    console.log(error)
                     ending.innerHTML = 'Match is Tie';
+                    Run_Calulations_After_Random_Generate = null;
                     setTimeout(() => {
                         ending.innerText = "Let's Start Now";
                         buttons.forEach((e) => {
@@ -74,25 +119,29 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 500);
         };
         e.addEventListener('click', () => {
-            if (isgame == false) {
-                isgame = true;
-                buttons[index].innerHTML = cross
-                winnerChecker();
-                if(isCrossWinner == true) {
-                    ending.innerHTML = 'You Win';
-                    setTimeout(() => {
-                        ending.innerText = "Let's Start Now";
-                        buttons.forEach((e) => {
-                            if (e.innerHTML == zero || e.innerHTML == cross) {
-                                e.innerHTML = '';
-                            }
-                        });
-                    }, 1500);
-                    isCrossWinner = false
-                    isgame = false
-                }else{
-                    randomFunction();
+            if (!buttons[index].innerHTML) {
+                if (isgame == false) {
+                    isgame = true;
+                    buttons[index].innerHTML = cross
+                    winnerChecker();
+                    if (isCrossWinner == true) {
+                        ending.innerHTML = 'You Win';
+                        setTimeout(() => {
+                            ending.innerText = "Let's Start Now";
+                            buttons.forEach((e) => {
+                                if (e.innerHTML == zero || e.innerHTML == cross) {
+                                    e.innerHTML = '';
+                                }
+                            });
+                        }, 1500);
+                        isCrossWinner = false
+                        isgame = false
+                    } else {
+                        randomFunction();
+                    }
                 }
+            } else {
+                alert("Already Chooose");
             }
         });
     });
